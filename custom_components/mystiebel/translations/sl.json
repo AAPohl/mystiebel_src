@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Povežite se z MyStiebel",
+        "description": "Vnesite poverilnice za vaš MyStiebel račun.",
+        "data": {
+          "username": "Uporabniško ime",
+          "password": "Geslo"
+        }
+      },
+      "device": {
+        "title": "Izberite Napravo",
+        "description": "Izberite napravo, ki jo želite dodati v Home Assistant. Najdene naprave: {devices}",
+        "data": {
+          "device": "Naprava"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Preverjanje pristnosti ni uspelo. Preverite uporabniško ime in geslo.",
+      "no_devices_found": "Na tem računu ni bilo najdenih nobenih naprav."
+    },
+    "abort": {
+      "already_configured": "Ta naprava je že nastavljena."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti MyStiebel",
+        "data": {
+          "bath_volume": "Povprečna prostornina kopeli (Litrov)",
+          "shower_output": "Povprečni pretok tuša (Litrov na minuto)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Trenutna Napaka",
+        "state": {
+          "no_error": "Brez Napak"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Verzija Programske Opreme Krmilnika"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Verzija Programske Opreme Wi-Fi Adapterja"
+      },
+      "product_pid": {
+        "name": "PID Izdelka"
+      },
+      "gateway_pid": {
+        "name": "PID IoT Prehoda"
+      },
+      "runtime_compressor": {
+        "name": "Čas delovanja kompresorja"
+      },
+      "runtime_heating": {
+        "name": "Čas delovanja ogrevanja"
+      },
+      "available_baths": {
+        "name": "Razpoložljive kopeli"
+      },
+      "available_shower_time": {
+        "name": "Razpoložljiv čas tuširanja"
+      }
+    }
+  }
+}

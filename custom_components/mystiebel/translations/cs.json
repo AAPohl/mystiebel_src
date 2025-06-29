@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Připojit k MyStiebel",
+        "description": "Zadejte přihlašovací údaje ke svému účtu MyStiebel.",
+        "data": {
+          "username": "Uživatelské jméno",
+          "password": "Heslo"
+        }
+      },
+      "device": {
+        "title": "Vybrat Zařízení",
+        "description": "Vyberte zařízení, které chcete přidat do Home Assistant. Nalezená zařízení: {devices}",
+        "data": {
+          "device": "Zařízení"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Ověření se nezdařilo. Zkontrolujte prosím své uživatelské jméno a heslo.",
+      "no_devices_found": "Na tomto účtu nebyla nalezena žádná zařízení."
+    },
+    "abort": {
+      "already_configured": "Toto zařízení je již nakonfigurováno."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti MyStiebel",
+        "data": {
+          "bath_volume": "Průměrný objem koupele (Litry)",
+          "shower_output": "Průměrný průtok sprchy (Litry za minutu)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Aktuální Chyba",
+        "state": {
+          "no_error": "Bez Chyby"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Verze Softwaru Ovladače"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Verze Softwaru Wi-Fi Adaptéru"
+      },
+      "product_pid": {
+        "name": "ID Produktu"
+      },
+      "gateway_pid": {
+        "name": "ID IoT Brány"
+      },
+      "runtime_compressor": {
+        "name": "Doba běhu kompresoru"
+      },
+      "runtime_heating": {
+        "name": "Doba běhu topení"
+      },
+      "available_baths": {
+        "name": "Dostupné koupele"
+      },
+      "available_shower_time": {
+        "name": "Dostupný čas sprchování"
+      }
+    }
+  }
+}

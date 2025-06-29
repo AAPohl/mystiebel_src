@@ -1,0 +1,76 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Mit MyStiebel verbinden",
+        "description": "Geben Sie die Anmeldedaten für Ihr MyStiebel-Konto ein.",
+        "data": {
+          "username": "Benutzername",
+          "password": "Passwort"
+        }
+      },
+      "device": {
+        "title": "Gerät auswählen",
+        "description": "Wählen Sie das Gerät aus, das Sie zu Home Assistant hinzufügen möchten. Gefundene Geräte: {devices}",
+        "data": {
+          "device": "Gerät"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Authentifizierung fehlgeschlagen. Bitte überprüfen Sie Ihren Benutzernamen und Ihr Passwort.",
+      "no_devices_found": "Keine Geräte für dieses Konto gefunden."
+    },
+    "abort": {
+      "already_configured": "Dieses Gerät ist bereits konfiguriert."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "MyStiebel Optionen",
+        "data": {
+          "bath_volume": "Durchschnittliches Wannenvolumen (Liter)",
+          "shower_output": "Durchschnittliche Duschleistung (Liter pro Minute)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Aktueller Fehler"
+      },
+      "controller_sw_version": {
+        "name": "Softwareversion Steuerung"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Softwareversion WLAN-Adapter"
+      },
+      "product_pid": {
+        "name": "Produkt-ID"
+      },
+      "gateway_pid": {
+        "name": "IoT Gateway-ID"
+      },
+      "runtime_compressor": {
+        "name": "Laufzeit Verdichter"
+      },
+      "runtime_heating": {
+        "name": "Laufzeit Heizelement"
+      },
+      "available_baths": {
+        "name": "Verfügbare Bäder"
+      },
+      "available_shower_time": {
+        "name": "Verfügbare Duschzeit"
+      }
+    }
+  },
+  "state": {
+    "sensor.mystiebel_alarm_description": {
+      "no_error": "Kein Fehler"
+    }
+  }
+}

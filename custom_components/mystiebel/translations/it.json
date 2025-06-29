@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connettiti a MyStiebel",
+        "description": "Inserisci le credenziali del tuo account MyStiebel.",
+        "data": {
+          "username": "Nome utente",
+          "password": "Password"
+        }
+      },
+      "device": {
+        "title": "Seleziona Dispositivo",
+        "description": "Scegli il dispositivo che vuoi aggiungere a Home Assistant. Dispositivi trovati: {devices}",
+        "data": {
+          "device": "Dispositivo"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Autenticazione fallita. Controlla nome utente e password.",
+      "no_devices_found": "Nessun dispositivo trovato su questo account."
+    },
+    "abort": {
+      "already_configured": "Questo dispositivo è già configurato."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opzioni MyStiebel",
+        "data": {
+          "bath_volume": "Volume medio vasca (Litri)",
+          "shower_output": "Portata media doccia (Litri al minuto)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Errore Corrente",
+        "state": {
+          "no_error": "Nessun Errore"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Versione Software Controller"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Versione Software Adattatore Wi-Fi"
+      },
+      "product_pid": {
+        "name": "ID Prodotto"
+      },
+      "gateway_pid": {
+        "name": "ID Gateway IoT"
+      },
+      "runtime_compressor": {
+        "name": "Tempo di funzionamento compressore"
+      },
+      "runtime_heating": {
+        "name": "Tempo di funzionamento riscaldamento"
+      },
+      "available_baths": {
+        "name": "Bagni disponibili"
+      },
+      "available_shower_time": {
+        "name": "Tempo doccia disponibile"
+      }
+    }
+  }
+}

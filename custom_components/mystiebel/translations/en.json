@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to MyStiebel",
+        "description": "Enter your MyStiebel account credentials.",
+        "data": {
+          "username": "Username",
+          "password": "Password"
+        }
+      },
+      "device": {
+        "title": "Select Device",
+        "description": "Choose the device you want to add to Home Assistant. Found devices: {devices}",
+        "data": {
+          "device": "Device"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Authentication failed. Please check your username and password.",
+      "no_devices_found": "No devices found on this account."
+    },
+    "abort": {
+      "already_configured": "This device is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "MyStiebel Options",
+        "data": {
+          "bath_volume": "Average bath volume (Liters)",
+          "shower_output": "Average shower output (Liters per minute)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Current Error",
+        "state": {
+          "no_error": "No Error"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Controller Software Version"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Wi-Fi Adapter Software Version"
+      },
+      "product_pid": {
+        "name": "Product ID"
+      },
+      "gateway_pid": {
+        "name": "IoT Gateway ID"
+      },
+      "runtime_compressor": {
+        "name": "Runtime Compressor"
+      },
+      "runtime_heating": {
+        "name": "Runtime Heating2"
+      },
+      "available_baths": {
+        "name": "Available Baths 2"
+      },
+      "available_shower_time": {
+        "name": "Available Shower Time"
+      }
+    }
+  }
+}

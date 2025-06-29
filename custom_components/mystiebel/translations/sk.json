@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Pripojiť k MyStiebel",
+        "description": "Zadajte prihlasovacie údaje k vášmu účtu MyStiebel.",
+        "data": {
+          "username": "Používateľské meno",
+          "password": "Heslo"
+        }
+      },
+      "device": {
+        "title": "Vyberte Zariadenie",
+        "description": "Vyberte zariadenie, ktoré chcete pridať do Home Assistant. Nájdené zariadenia: {devices}",
+        "data": {
+          "device": "Zariadenie"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Overenie zlyhalo. Skontrolujte svoje používateľské meno a heslo.",
+      "no_devices_found": "Na tomto účte sa nenašli žiadne zariadenia."
+    },
+    "abort": {
+      "already_configured": "Toto zariadenie je už nakonfigurované."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Možnosti MyStiebel",
+        "data": {
+          "bath_volume": "Priemerný objem kúpeľa (Litre)",
+          "shower_output": "Priemerný prietok sprchy (Litre za minútu)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Aktuálna Chyba",
+        "state": {
+          "no_error": "Bez Chyby"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Verzia Softvéru Ovládača"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Verzia Softvéru Wi-Fi Adaptéra"
+      },
+      "product_pid": {
+        "name": "PID Produktu"
+      },
+      "gateway_pid": {
+        "name": "PID IoT Brány"
+      },
+      "runtime_compressor": {
+        "name": "Doba chodu kompresora"
+      },
+      "runtime_heating": {
+        "name": "Doba chodu ohrevu"
+      },
+      "available_baths": {
+        "name": "Dostupné kúpele"
+      },
+      "available_shower_time": {
+        "name": "Dostupný čas sprchovania"
+      }
+    }
+  }
+}

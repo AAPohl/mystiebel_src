@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Połącz z MyStiebel",
+        "description": "Wprowadź poświadczenia swojego konta MyStiebel.",
+        "data": {
+          "username": "Nazwa użytkownika",
+          "password": "Hasło"
+        }
+      },
+      "device": {
+        "title": "Wybierz Urządzenie",
+        "description": "Wybierz urządzenie, które chcesz dodać do Home Assistant. Znalezione urządzenia: {devices}",
+        "data": {
+          "device": "Urządzenie"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Uwierzytelnianie nie powiodło się. Sprawdź swoją nazwę użytkownika i hasło.",
+      "no_devices_found": "Nie znaleziono żadnych urządzeń na tym koncie."
+    },
+    "abort": {
+      "already_configured": "To urządzenie jest już skonfigurowane."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opcje MyStiebel",
+        "data": {
+          "bath_volume": "Średnia objętość kąpieli (Litry)",
+          "shower_output": "Średni wydatek prysznica (Litry na minutę)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Aktualny Błąd",
+        "state": {
+          "no_error": "Brak Błędów"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Wersja Oprogramowania Kontrolera"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Wersja Oprogramowania Adaptera Wi-Fi"
+      },
+      "product_pid": {
+        "name": "PID Produktu"
+      },
+      "gateway_pid": {
+        "name": "PID Bramki IoT"
+      },
+      "runtime_compressor": {
+        "name": "Czas pracy sprężarki"
+      },
+      "runtime_heating": {
+        "name": "Czas pracy ogrzewania"
+      },
+      "available_baths": {
+        "name": "Dostępne kąpiele"
+      },
+      "available_shower_time": {
+        "name": "Dostępny czas prysznica"
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Csatlakozás a MyStiebelhez",
+        "description": "Adja meg MyStiebel fiókjának hitelesítő adatait.",
+        "data": {
+          "username": "Felhasználónév",
+          "password": "Jelszó"
+        }
+      },
+      "device": {
+        "title": "Eszköz kiválasztása",
+        "description": "Válassza ki a Home Assistanthez hozzáadni kívánt eszközt. Talált eszközök: {devices}",
+        "data": {
+          "device": "Eszköz"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "A hitelesítés sikertelen. Kérjük, ellenőrizze a felhasználónevét és jelszavát.",
+      "no_devices_found": "Nincs eszköz ezen a fiókon."
+    },
+    "abort": {
+      "already_configured": "Ez az eszköz már be van állítva."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "MyStiebel Beállítások",
+        "data": {
+          "bath_volume": "Átlagos fürdővíz-mennyiség (Liter)",
+          "shower_output": "Átlagos zuhanykimenet (Liter percenként)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Jelenlegi Hiba",
+        "state": {
+          "no_error": "Nincs Hiba"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Vezérlő Szoftver Verziója"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Wi-Fi Adapter Szoftver Verziója"
+      },
+      "product_pid": {
+        "name": "Termékazonosító"
+      },
+      "gateway_pid": {
+        "name": "IoT Átjáró Azonosító"
+      },
+      "runtime_compressor": {
+        "name": "Kompresszor üzemidő"
+      },
+      "runtime_heating": {
+        "name": "Fűtés üzemidő"
+      },
+      "available_baths": {
+        "name": "Elérhető fürdések"
+      },
+      "available_shower_time": {
+        "name": "Elérhető zuhanyidő"
+      }
+    }
+  }
+}

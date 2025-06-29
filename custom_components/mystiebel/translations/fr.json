@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Se connecter à MyStiebel",
+        "description": "Entrez les identifiants de votre compte MyStiebel.",
+        "data": {
+          "username": "Nom d'utilisateur",
+          "password": "Mot de passe"
+        }
+      },
+      "device": {
+        "title": "Sélectionner l'appareil",
+        "description": "Choisissez l'appareil que vous souhaitez ajouter à Home Assistant. Appareils trouvés : {devices}",
+        "data": {
+          "device": "Appareil"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "L'authentification a échoué. Veuillez vérifier votre nom d'utilisateur et votre mot de passe.",
+      "no_devices_found": "Aucun appareil trouvé sur ce compte."
+    },
+    "abort": {
+      "already_configured": "Cet appareil est déjà configuré."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Options de MyStiebel",
+        "data": {
+          "bath_volume": "Volume moyen d'un bain (Litres)",
+          "shower_output": "Débit moyen de la douche (Litres par minute)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Erreur Actuelle",
+        "state": {
+          "no_error": "Aucune Erreur"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Version du Logiciel du Contrôleur"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Version du Logiciel de l'Adaptateur Wi-Fi"
+      },
+      "product_pid": {
+        "name": "PID du Produit"
+      },
+      "gateway_pid": {
+        "name": "PID de la Passerelle IoT"
+      },
+      "runtime_compressor": {
+        "name": "Temps de fonctionnement du compresseur"
+      },
+      "runtime_heating": {
+        "name": "Temps de fonctionnement du chauffage"
+      },
+      "available_baths": {
+        "name": "Bains disponibles"
+      },
+      "available_shower_time": {
+        "name": "Temps de douche disponible"
+      }
+    }
+  }
+}

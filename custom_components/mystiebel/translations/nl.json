@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Verbind met MyStiebel",
+        "description": "Voer de inloggegevens van je MyStiebel-account in.",
+        "data": {
+          "username": "Gebruikersnaam",
+          "password": "Wachtwoord"
+        }
+      },
+      "device": {
+        "title": "Selecteer Apparaat",
+        "description": "Kies het apparaat dat je wilt toevoegen aan Home Assistant. Gevonden apparaten: {devices}",
+        "data": {
+          "device": "Apparaat"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Authenticatie mislukt. Controleer je gebruikersnaam en wachtwoord.",
+      "no_devices_found": "Geen apparaten gevonden voor dit account."
+    },
+    "abort": {
+      "already_configured": "Dit apparaat is al geconfigureerd."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "MyStiebel Opties",
+        "data": {
+          "bath_volume": "Gemiddeld badvolume (Liters)",
+          "shower_output": "Gemiddeld douchedebiet (Liters per minuut)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Actuele Fout Omschrijving",
+        "state": {
+          "no_error": "Geen fout"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Controller Software Versie"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Wi-Fi Adapter Software Versie"
+      },
+      "product_pid": {
+        "name": "Product PID"
+      },
+      "gateway_pid": {
+        "name": "IoT Gateway PID"
+      },
+      "runtime_compressor": {
+        "name": "Looptijd Compressor"
+      },
+      "runtime_heating": {
+        "name": "Looptijd Verwarmingselement"
+      },
+      "available_baths": {
+        "name": "Beschikbaar aantal baden"
+      },
+      "available_shower_time": {
+        "name": "Beschikbare douchetijd"
+      }
+    }
+  }
+}

@@ -1,0 +1,74 @@
+{
+  "title": "MyStiebel",
+  "config": {
+    "step": {
+      "user": {
+        "title": "Conectar a MyStiebel",
+        "description": "Introduce las credenciales de tu cuenta de MyStiebel.",
+        "data": {
+          "username": "Nombre de usuario",
+          "password": "Contraseña"
+        }
+      },
+      "device": {
+        "title": "Seleccionar Dispositivo",
+        "description": "Elige el dispositivo que quieres añadir a Home Assistant. Dispositivos encontrados: {devices}",
+        "data": {
+          "device": "Dispositivo"
+        }
+      }
+    },
+    "error": {
+      "auth_error": "Fallo de autenticación. Por favor, comprueba tu nombre de usuario y contraseña.",
+      "no_devices_found": "No se encontraron dispositivos en esta cuenta."
+    },
+    "abort": {
+      "already_configured": "Este dispositivo ya está configurado."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Opciones de MyStiebel",
+        "data": {
+          "bath_volume": "Volumen medio de baño (Litros)",
+          "shower_output": "Caudal medio de la ducha (Litros por minuto)"
+        }
+      }
+    }
+  },
+  "entity": {
+    "sensor": {
+      "alarm_description": {
+        "name": "Error Actual",
+        "state": {
+          "no_error": "Sin Errores"
+        }
+      },
+      "controller_sw_version": {
+        "name": "Versión del Software del Controlador"
+      },
+      "wifi_adapter_sw_version": {
+        "name": "Versión del Software del Adaptador Wi-Fi"
+      },
+      "product_pid": {
+        "name": "ID de Producto"
+      },
+      "gateway_pid": {
+        "name": "ID de la Puerta de Enlace IoT"
+      },
+      "runtime_compressor": {
+        "name": "Tiempo de funcionamiento del compresor"
+      },
+      "runtime_heating": {
+        "name": "Tiempo de funcionamiento de la calefacción"
+      },
+      "available_baths": {
+        "name": "Baños disponibles"
+      },
+      "available_shower_time": {
+        "name": "Tiempo de ducha disponible"
+      }
+    }
+  }
+}
