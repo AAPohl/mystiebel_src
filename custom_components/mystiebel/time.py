@@ -1,7 +1,7 @@
 """Time platform for MyStiebel integration."""
 
-from datetime import datetime, time, timedelta
 import logging
+from datetime import datetime, time, timedelta
 
 from homeassistant.components.time import TimeEntity
 from homeassistant.core import HomeAssistant
