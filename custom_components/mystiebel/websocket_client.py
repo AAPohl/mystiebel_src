@@ -54,7 +54,7 @@ def SET_VALUE_MSG(installation_id, client_id, register_index, value):
 def setup_websocket_listener(
     hass: HomeAssistant, session, coordinator, fields_to_monitor: list
 ):
-    """Start de WebSocket-listener als achtergrondtaak."""
+    """Start the WebSocket listener as a background task."""
 
     async def _run():
         headers = {

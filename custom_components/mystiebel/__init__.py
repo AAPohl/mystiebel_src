@@ -43,8 +43,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         _LOGGER.error("Could not find installation with ID {installation_id}")
         return False
 
-    device_name = f"{device_data.get('profile', {}).get('name', 'Onbekend')} in {device_data.get('location', {}).get('city', 'Onbekend')}"
-    model = device_data.get("profile", {}).get("name", "Onbekend")
+    device_name = f"{device_data.get('profile', {}).get('name', 'Unknown')} in {device_data.get('location', {}).get('city', 'Unknown')}"
+    model = device_data.get("profile", {}).get("name", "Unknown")
     sw_version = device_data.get("firmware", {}).get("firmwareVersion")
     mac_address = device_data.get("macAddress")
 
