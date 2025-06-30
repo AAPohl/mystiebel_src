@@ -2,7 +2,9 @@
 
 import logging
 from asyncio import Event
+
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
+
 from .const import DOMAIN
 
 _LOGGER = logging.getLogger(__name__)
@@ -46,6 +48,10 @@ class MyStiebelCoordinator(DataUpdateCoordinator):
     def set_websocket(self, ws):
         self.ws = ws
 
+    def set_token(self, token: str):
+        """Update the authentication token."""
+        self.token = token
+
     async def async_set_value(self, register_index, value):
         if self.ws and not self.ws.closed:
             from .websocket_client import SET_VALUE_MSG
@@ -53,10 +59,11 @@ class MyStiebelCoordinator(DataUpdateCoordinator):
             message = SET_VALUE_MSG(
                 self.installation_id, self.client_id, register_index, value
             )
+            _LOGGER.debug("➡️ Sending setValues message: %s", message)
             await self.ws.send_json(message)
             self.process_data_update(
                 [{"registerIndex": register_index, "displayValue": value}]
             )
             return True
-        _LOGGER.error("❌ WebSocket not available or closed. Cannot set value.")
+        _LOGGER.error("❌ WebSocket not available or closed. Cannot set value")
         return False

@@ -76,7 +76,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    setup_websocket_listener(hass, session, coordinator, coordinator.active_fields)
+    setup_websocket_listener(
+        hass, session, coordinator, auth, coordinator.active_fields
+    )
     return True
 
 
