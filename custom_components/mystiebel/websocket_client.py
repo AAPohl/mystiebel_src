@@ -32,10 +32,6 @@ def SUBSCRIBE_MSG(installation_id, fields):
 
 
 def SET_VALUE_MSG(installation_id, client_id, register_index, value):
-    try:
-        numeric_value = int(float(value))
-    except (ValueError, TypeError):
-        numeric_value = 0
     return {
         "jsonrpc": "2.0",
         "id": random.randint(1_000_000_000, 9_999_999_999),
@@ -45,7 +41,7 @@ def SET_VALUE_MSG(installation_id, client_id, register_index, value):
             "UUID": client_id,
             "listenWithValuesChanged": True,
             "fields": [
-                {"registerIndex": register_index, "displayValue": numeric_value}
+                {"registerIndex": register_index, "displayValue": value}
             ],
         },
     }

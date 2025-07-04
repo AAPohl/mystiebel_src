@@ -88,6 +88,4 @@ class MyStiebelNumber(MyStiebelBaseEntity, NumberEntity):
             return None
 
     async def async_set_native_value(self, value: float) -> None:
-        scale = int(self._param.get("scale", 0))
-        api_value = int(round(value * (10**-scale)))
-        await self.coordinator.async_set_value(self._register_index, api_value)
+        await self.coordinator.async_set_value(self._register_index, value)
