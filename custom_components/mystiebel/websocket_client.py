@@ -72,17 +72,43 @@ class WebSocketClient:
         self.fields_to_monitor = fields_to_monitor
         self.reconnect_delay = WEBSOCKET_RECONNECT_INITIAL
         self._running = True
+        self._task = None
+        self._current_ws = None
 
     def start(self) -> None:
         """Start the WebSocket client as a background task."""
-        self.hass.async_create_background_task(
+        self._task = self.hass.async_create_background_task(
             self._run(),
             "mystiebel_websocket"
         )
 
     async def stop(self) -> None:
         """Stop the WebSocket client."""
+        _LOGGER.debug("Stopping WebSocket client")
         self._running = False
+
+        # Close any active WebSocket connection first
+        if self._current_ws and not self._current_ws.closed:
+            try:
+                await self._current_ws.close()
+                _LOGGER.debug("Closed active WebSocket connection")
+            except Exception as e:
+                _LOGGER.warning("Error closing WebSocket: %s", e)
+
+        # Cancel the background task
+        if self._task and not self._task.done():
+            self._task.cancel()
+            try:
+                # Wait for task to complete with a timeout
+                await asyncio.wait_for(self._task, timeout=5.0)
+            except asyncio.CancelledError:
+                _LOGGER.debug("WebSocket task cancelled")
+            except asyncio.TimeoutError:
+                _LOGGER.warning("WebSocket task did not stop within timeout")
+            except Exception as e:
+                _LOGGER.warning("Error stopping WebSocket task: %s", e)
+
+        _LOGGER.info("WebSocket client stopped completely")
 
     async def _run(self) -> None:
         """Main run loop with automatic reconnection."""
@@ -94,9 +120,14 @@ class WebSocketClient:
                 else:
                     # Connection failed, apply backoff
                     await self._handle_reconnect()
+            except asyncio.CancelledError:
+                # Task was cancelled, stop immediately
+                _LOGGER.debug("WebSocket task cancelled, stopping")
+                break
             except Exception as e:
                 _LOGGER.error("Unexpected error in WebSocket loop: %s", e, exc_info=True)
-                await self._handle_reconnect()
+                if self._running:  # Only reconnect if we're still supposed to be running
+                    await self._handle_reconnect()
 
     async def _connect_and_listen(self) -> bool:
         """Establish connection and listen for messages.
@@ -111,6 +142,7 @@ class WebSocketClient:
 
             # Create WebSocket connection
             async with await self._create_connection() as ws:
+                self._current_ws = ws
                 self.coordinator.set_websocket(ws)
 
                 # Login to WebSocket
@@ -121,6 +153,10 @@ class WebSocketClient:
 
             return True
 
+        except asyncio.CancelledError:
+            # Re-raise cancellation to propagate it
+            _LOGGER.debug("Connection cancelled")
+            raise
         except aiohttp.ClientError as e:
             _LOGGER.error("WebSocket connection error: %s", e)
             return False
@@ -128,6 +164,7 @@ class WebSocketClient:
             _LOGGER.error("Unexpected error during WebSocket connection: %s", e)
             return False
         finally:
+            self._current_ws = None
             self.coordinator.set_websocket(None)
 
     async def _authenticate(self) -> None:
@@ -268,8 +305,17 @@ class WebSocketClient:
 
     async def _handle_reconnect(self) -> None:
         """Handle reconnection with exponential backoff."""
+        if not self._running:
+            return  # Don't reconnect if we're stopping
+
         _LOGGER.info("Reconnecting in %d seconds", self.reconnect_delay)
-        await asyncio.sleep(self.reconnect_delay)
+
+        # Use interruptible sleep so we can cancel quickly
+        try:
+            await asyncio.sleep(self.reconnect_delay)
+        except asyncio.CancelledError:
+            _LOGGER.debug("Reconnect sleep cancelled")
+            raise
 
         # Exponential backoff
         self.reconnect_delay = min(

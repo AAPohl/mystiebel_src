@@ -13,6 +13,7 @@ from homeassistant.helpers import aiohttp_client
 
 from .const import DOMAIN
 from .mystiebel_auth import MyStiebelAuth
+from .storage import CredentialStore
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -101,12 +102,24 @@ class MyStiebelConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
 
+            # Generate unique credential ID for this entry
+            credential_id = str(uuid.uuid4())
+
+            # Store credentials in encrypted storage
+            credential_store = CredentialStore(self.hass)
+            await credential_store.async_load()
+            await credential_store.async_save(
+                entry_id=credential_id,
+                username=self.user_credentials["username"],
+                password=self.user_credentials["password"],
+                client_id=self.user_credentials["client_id"],
+            )
+
+            # Only store credential ID and installation ID in config entry
             return self.async_create_entry(
                 title=selected_device_name,
                 data={
-                    "username": self.user_credentials["username"],
-                    "password": self.user_credentials["password"],
-                    "client_id": self.user_credentials["client_id"],
+                    "credential_id": credential_id,
                     "installation_id": selected_device["id"],
                 },
             )

@@ -3,6 +3,7 @@
 import asyncio
 import logging
 from asyncio import Event, Lock
+from datetime import datetime, timedelta
 from typing import Any
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
@@ -47,6 +48,8 @@ class MyStiebelCoordinator(DataUpdateCoordinator):
         self.ready_event = Event()
         self.ws = None
         self._data_lock = Lock()
+        self._last_ha_update = datetime.now()
+        self._stale_threshold = timedelta(seconds=60)  # Update HA at least every minute
 
     async def _async_update_data(self) -> dict[int, Any]:
         """Return the current data."""
@@ -62,15 +65,27 @@ class MyStiebelCoordinator(DataUpdateCoordinator):
                     register = update.get("registerIndex")
                     value = update.get("displayValue")
                     if register is not None:
-                        # Only update if value actually changed
+                        # Check if value actually changed
                         if self.data.get(register) != value:
                             self.data[register] = value
                             changed = True
                             _LOGGER.debug(
                                 "Updated register %d: %s", register, value
                             )
-                if changed:
+
+                # Update HA if data changed OR if last update was too long ago
+                time_since_update = datetime.now() - self._last_ha_update
+                should_update = changed or time_since_update > self._stale_threshold
+
+                if should_update:
                     self.async_set_updated_data(self.data.copy())
+                    self._last_ha_update = datetime.now()
+
+                    if not changed:
+                        _LOGGER.debug(
+                            "Heartbeat update sent to HA (no data changes for %s seconds)",
+                            int(time_since_update.total_seconds())
+                        )
 
         # Schedule the update in the event loop
         asyncio.create_task(_update())
