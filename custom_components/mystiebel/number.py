@@ -7,7 +7,12 @@ from homeassistant.components.sensor import SensorDeviceClass
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
 
-from .const import DOMAIN, ESSENTIAL_CONTROLS, NUMERIC_CONTROL_TYPES
+from .const import (
+    DOMAIN,
+    ESSENTIAL_CONTROLS,
+    EXCLUDED_INDIVIDUAL_SENSORS,
+    NUMERIC_CONTROL_TYPES,
+)
 from .sensor import MyStiebelBaseEntity, normalize_unit
 
 _LOGGER = logging.getLogger(__name__)
@@ -20,6 +25,10 @@ def _setup_number_entities(coordinator):
     )
     numbers = []
     for idx in fields_to_create:
+        # Skip excluded sensors (e.g., those combined into other entities)
+        if idx in EXCLUDED_INDIVIDUAL_SENSORS:
+            continue
+
         param = params_to_check.get(idx)
         group_id = param.get("group_id", "") if param else ""
         if (

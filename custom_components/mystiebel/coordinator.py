@@ -1,7 +1,9 @@
 """Data update coordinator for the MyStiebel integration."""
 
+import asyncio
 import logging
-from asyncio import Event
+from asyncio import Event, Lock
+from typing import Any
 
 from homeassistant.helpers.update_coordinator import DataUpdateCoordinator
 
@@ -15,55 +17,98 @@ class MyStiebelCoordinator(DataUpdateCoordinator):
         self,
         hass,
         session,
-        token,
-        installation_id,
-        client_id,
-        device_name,
-        model,
-        sw_version,
-        mac_address,
-        bath_volume,
-        shower_output,
-    ):
+        token: str,
+        installation_id: str,
+        client_id: str,
+        device_name: str,
+        model: str,
+        sw_version: str | None,
+        mac_address: str | None,
+        bath_volume: int,
+        shower_output: int,
+    ) -> None:
+        """Initialize the MyStiebel coordinator."""
         super().__init__(hass, _LOGGER, name=DOMAIN)
-        self.session, self.token, self.installation_id = session, token, installation_id
-        self.client_id, self.device_name = client_id, device_name
-        self.model, self.sw_version, self.mac_address = model, sw_version, mac_address
+        self.session = session
+        self.token = token
+        self.installation_id = installation_id
+        self.client_id = client_id
+        self.device_name = device_name
+        self.model = model
+        self.sw_version = sw_version
+        self.mac_address = mac_address
         self.bath_volume = bath_volume
         self.shower_output = shower_output
-        self.entities, self.data = {}, {}
-        self.parameters, self.alarms, self.active_fields = {}, {}, []
-        self.ready_event, self.ws = Event(), None
+        self.entities: dict[str, Any] = {}
+        self.data: dict[int, Any] = {}
+        self.parameters: dict[int, Any] = {}
+        self.alarms: dict[int, Any] = {}
+        self.active_fields: list[int] = []
+        self.ready_event = Event()
+        self.ws = None
+        self._data_lock = Lock()
 
-    async def _async_update_data(self):
-        return self.data
+    async def _async_update_data(self) -> dict[int, Any]:
+        """Return the current data."""
+        async with self._data_lock:
+            return self.data.copy()
 
-    def process_data_update(self, data_updates: list[dict]):
-        for update in data_updates:
-            register, value = update.get("registerIndex"), update.get("displayValue")
-            if register is not None:
-                self.data[register] = value
-        self.async_set_updated_data(self.data)
+    def process_data_update(self, data_updates: list[dict[str, Any]]) -> None:
+        """Process incoming data updates in a thread-safe manner."""
+        async def _update() -> None:
+            async with self._data_lock:
+                changed = False
+                for update in data_updates:
+                    register = update.get("registerIndex")
+                    value = update.get("displayValue")
+                    if register is not None:
+                        # Only update if value actually changed
+                        if self.data.get(register) != value:
+                            self.data[register] = value
+                            changed = True
+                            _LOGGER.debug(
+                                "Updated register %d: %s", register, value
+                            )
+                if changed:
+                    self.async_set_updated_data(self.data.copy())
 
-    def set_websocket(self, ws):
+        # Schedule the update in the event loop
+        asyncio.create_task(_update())
+
+    def set_websocket(self, ws: Any) -> None:
+        """Set the WebSocket connection."""
         self.ws = ws
 
     def set_token(self, token: str):
         """Update the authentication token."""
         self.token = token
 
-    async def async_set_value(self, register_index, value):
+    async def async_set_value(
+        self, register_index: int, value: Any
+    ) -> bool:
+        """Set a value via WebSocket."""
         if self.ws and not self.ws.closed:
             from .websocket_client import SET_VALUE_MSG
 
             message = SET_VALUE_MSG(
                 self.installation_id, self.client_id, register_index, value
             )
-            _LOGGER.debug("➡️ Sending setValues message: %s", message)
-            await self.ws.send_json(message)
-            self.process_data_update(
-                [{"registerIndex": register_index, "displayValue": value}]
-            )
-            return True
-        _LOGGER.error("❌ WebSocket not available or closed. Cannot set value")
+            _LOGGER.debug("Sending setValues message for register %d", register_index)
+
+            try:
+                await self.ws.send_json(message)
+                # Optimistically update the local data
+                self.process_data_update(
+                    [{"registerIndex": register_index, "displayValue": value}]
+                )
+                return True
+            except Exception as e:
+                _LOGGER.error(
+                    "Failed to send value to register %d: %s",
+                    register_index,
+                    e,
+                )
+                return False
+
+        _LOGGER.error("WebSocket not available or closed. Cannot set value")
         return False

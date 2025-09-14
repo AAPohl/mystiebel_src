@@ -5,6 +5,28 @@ from homeassistant.components.sensor import SensorDeviceClass, SensorStateClass
 DOMAIN = "mystiebel"
 WS_URL = "wss://serviceapi.mystiebel.com/ws/v1"
 
+# API Configuration
+BASE_URL = "https://auth.mystiebel.com"
+SERVICE_URL = "https://serviceapi.mystiebel.com"
+
+# App Configuration
+APP_NAME = "MyStiebelApp"
+APP_VERSION_ANDROID = "Android_2.3.0"
+USER_AGENT = f"{APP_NAME}/2.3.0 Dalvik/2.1.0"
+
+# Timing Constants
+WEBSOCKET_HEARTBEAT = 30  # seconds
+WEBSOCKET_RECONNECT_INITIAL = 5  # seconds
+WEBSOCKET_RECONNECT_MAX = 300  # 5 minutes
+TOKEN_REFRESH_MARGIN = 300  # Refresh token 5 minutes before expiry
+API_RATE_LIMIT_DELAY = 1  # Minimum seconds between API calls
+
+# Message ID Range
+MSG_ID_MIN = 1_000_000
+MSG_ID_MAX = 9_999_999
+MSG_ID_LONG_MIN = 1_000_000_000
+MSG_ID_LONG_MAX = 9_999_999_999
+
 # List of essential read-only sensors.
 # These will be enabled by default. All other sensor-type entities will be disabled by default.
 ESSENTIAL_SENSORS = [
@@ -57,6 +79,9 @@ EXCLUDED_INDIVIDUAL_SENSORS = {
     555,
     2450,
     558,
+    # Weekly hygiene program time (combined into single time entity)
+    2477,  # Minutes
+    2483,  # Hours
 }
 
 # --- Centralized Mappings ---
@@ -100,6 +125,7 @@ STATE_CLASS_MAP = {
     "Pressure": SensorStateClass.MEASUREMENT,
     "Humidity": SensorStateClass.MEASUREMENT,
     "Second": SensorStateClass.MEASUREMENT,
+    "Hour": SensorStateClass.MEASUREMENT,
     "Minute": SensorStateClass.MEASUREMENT,
     "DurationHours": SensorStateClass.MEASUREMENT,
     "DurationDays": SensorStateClass.MEASUREMENT,
@@ -120,6 +146,7 @@ NUMERIC_CONTROL_TYPES = {
     "Temperature",
     "Number",
     "Percentage",
+    "Hour",
     "Minute",
     "DurationHours",
     "DurationDays",

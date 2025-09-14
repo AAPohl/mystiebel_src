@@ -76,15 +76,32 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
 
-    setup_websocket_listener(
+    # Start WebSocket listener and store reference for cleanup
+    websocket_client = setup_websocket_listener(
         hass, session, coordinator, auth, coordinator.active_fields
     )
+    coordinator.websocket_client = websocket_client
+
     return True
 
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Handle removal of an entry."""
-    return await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+    # Stop WebSocket client if it exists
+    if entry.entry_id in hass.data.get(DOMAIN, {}):
+        coordinator = hass.data[DOMAIN][entry.entry_id]
+        if hasattr(coordinator, 'websocket_client'):
+            await coordinator.websocket_client.stop()
+            _LOGGER.debug("WebSocket client stopped for entry %s", entry.entry_id)
+
+    # Unload platforms
+    unload_ok = await hass.config_entries.async_unload_platforms(entry, PLATFORMS)
+
+    # Clean up data
+    if unload_ok and entry.entry_id in hass.data.get(DOMAIN, {}):
+        hass.data[DOMAIN].pop(entry.entry_id)
+
+    return unload_ok
 
 
 async def async_reload_entry(hass: HomeAssistant, entry: ConfigEntry) -> None:

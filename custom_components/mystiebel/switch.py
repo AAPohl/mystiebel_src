@@ -1,10 +1,12 @@
 """Switch platform for MyStiebel integration."""
 
 import logging
+
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity import EntityCategory
-from .const import DOMAIN, ESSENTIAL_CONTROLS
+
+from .const import DOMAIN, ESSENTIAL_CONTROLS, EXCLUDED_INDIVIDUAL_SENSORS
 from .sensor import MyStiebelBaseEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -17,6 +19,10 @@ def _setup_switch_entities(coordinator):
     )
     switches = []
     for idx in fields_to_create:
+        # Skip excluded sensors (e.g., those combined into other entities)
+        if idx in EXCLUDED_INDIVIDUAL_SENSORS:
+            continue
+
         param = params_to_check.get(idx)
         if (
             param

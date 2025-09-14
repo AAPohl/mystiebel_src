@@ -2,10 +2,13 @@
 
 import logging
 import uuid
+from typing import Any
 
+import aiohttp
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
+from homeassistant.data_entry_flow import FlowResult
 from homeassistant.helpers import aiohttp_client
 
 from .const import DOMAIN
@@ -19,9 +22,10 @@ class MyStiebelConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the config flow."""
-        self.user_credentials, self.installations = {}, {}
+        self.user_credentials: dict[str, Any] = {}
+        self.installations: dict[str, Any] = {}
 
     @staticmethod
     @callback
@@ -29,12 +33,16 @@ class MyStiebelConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         """Get the options flow for this handler."""
         return MyStiebelOptionsFlowHandler(config_entry)
 
-    async def async_step_user(self, user_input=None):
+    async def async_step_user(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Handle the initial step of the config flow for user credentials."""
-        errors = {}
+        errors: dict[str, str] = {}
+
         if user_input is not None:
             self.user_credentials = user_input
             self.user_credentials["client_id"] = str(uuid.uuid4())
+
             try:
                 session = aiohttp_client.async_get_clientsession(self.hass)
                 auth = MyStiebelAuth(
@@ -45,15 +53,34 @@ class MyStiebelConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 )
                 await auth.authenticate()
                 installations_data = await auth.get_installations()
+
                 for inst in installations_data.get("items", []):
-                    device_name = f"{inst.get('profile', {}).get('name', 'Unknown')} in {inst.get('location', {}).get('city', 'Unknown')}"
+                    profile = inst.get("profile", {})
+                    location = inst.get("location", {})
+                    device_name = (
+                        f"{profile.get('name', 'Unknown')} in "
+                        f"{location.get('city', 'Unknown')}"
+                    )
                     self.installations[device_name] = inst
+
                 if not self.installations:
                     return self.async_abort(reason="no_devices_found")
+
                 return await self.async_step_device()
-            except Exception:
-                _LOGGER.exception("Authentication failed")
-                errors["base"] = "auth_error"
+
+            except aiohttp.ClientResponseError as err:
+                if err.status == 401:
+                    errors["base"] = "invalid_auth"
+                    _LOGGER.error("Invalid credentials: %s", err)
+                else:
+                    errors["base"] = "cannot_connect"
+                    _LOGGER.error("HTTP error %s: %s", err.status, err)
+            except aiohttp.ClientError as err:
+                errors["base"] = "cannot_connect"
+                _LOGGER.error("Connection error: %s", err)
+            except Exception as err:
+                errors["base"] = "unknown"
+                _LOGGER.exception("Unexpected error: %s", err)
         return self.async_show_form(
             step_id="user",
             data_schema=vol.Schema(
@@ -62,14 +89,18 @@ class MyStiebelConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             errors=errors,
         )
 
-    async def async_step_device(self, user_input=None):
+    async def async_step_device(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Handle the step to select a device from the fetched list."""
         if user_input is not None:
             selected_device_name = user_input["device"]
             selected_device = self.installations[selected_device_name]
             unique_id = str(selected_device["id"])
+
             await self.async_set_unique_id(unique_id)
             self._abort_if_unique_id_configured()
+
             return self.async_create_entry(
                 title=selected_device_name,
                 data={
@@ -94,10 +125,13 @@ class MyStiebelOptionsFlowHandler(config_entries.OptionsFlow):
         """Initialize options flow."""
         self.config_entry = config_entry
 
-    async def async_step_init(self, user_input=None):
+    async def async_step_init(
+        self, user_input: dict[str, Any] | None = None
+    ) -> FlowResult:
         """Manage the options."""
         if user_input is not None:
             return self.async_create_entry(title="", data=user_input)
+
         options = self.config_entry.options
         data_schema = vol.Schema(
             {
