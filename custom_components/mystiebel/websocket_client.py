@@ -74,7 +74,13 @@ class WebSocketClient:
         self._running = True
         self._task = None
         self._current_ws = None
-
+    
+    async def restart(self) -> None:
+        """Restart the WebSocket client cleanly."""
+        await self.stop()
+        self._running = True
+        self.start()
+    
     def start(self) -> None:
         """Start the WebSocket client as a background task."""
         self._task = self.hass.async_create_background_task(
